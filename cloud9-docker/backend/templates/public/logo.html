@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header</title>
+    <link rel="shortcut icon" href="#">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+</head>
+<body>
+    <div>
+        <lottie-player onclick="goHome()" src="https://assets4.lottiefiles.com/packages/lf20_vtbam3pg.json"  background="transparent"  speed="0.5"  style="width: 60px; height: 60px; z-index: 10"  loop  autoplay></lottie-player>
+    </div>
+    <script>
+        let socket = io.connect('http://' + document.domain + ':' + location.port);
+        function goHome(){
+            console.log('http://' + document.domain + ':' + location.port + location.pathname)
+            data = { 'path' : location.pathname}
+            socket.emit('get_pathname' , data)
+            return location.href='/'
+        }
+    </script>
+</body>
+</html>

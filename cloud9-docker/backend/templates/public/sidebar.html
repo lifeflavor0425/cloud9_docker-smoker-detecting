@@ -1,0 +1,20 @@
+	<!-- Sidebar -->
+	<section id="sidebar">
+		<div class="inner">
+			{% include 'public/logo.html' %}
+			<nav>
+				<ul id="side_ul">
+					<li><a href="#intro">Welcome</a></li>
+					<li><a href="#one">Presentation</a></li>
+					<li><a href="#two">  Log in </a></li>
+					<li><a href="#three">Video Detection</a></li>
+					<li><a href="#four">Identical Detection</a></li>
+					<li>
+						<form action="{{ url_for('logout') }}" method="GET">
+							<button type="submit">Log out</button>
+						</form>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</section>

@@ -1,0 +1,5 @@
+cmake
+dlib
+numpy
+matplotlib
+boto3

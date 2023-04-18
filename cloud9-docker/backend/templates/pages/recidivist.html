@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<!-- Hyperspace by HTML5 UP -->
+	<title>Smoker Detection</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="/static/assets/css/main.css" />
+	<noscript>
+		<link rel="stylesheet" href="/static/assets/css/noscript.css" />
+	</noscript>
+</head>
+
+<body class="is-preload">
+	<!-- side bar -->
+	{% include 'public/sidebar.html' %}
+
+	<div id="wrapper">
+
+		<!-- video -->
+		<section id="intro" class="wrapper style1 fullscreen fade-up">
+			<div class="inner">
+				<img 
+				src="static/home_images/smokers.JPG" 
+				style="
+				display:inline-block;
+				width:85vw ;
+				max-width:80%;
+				height:80vh ;
+				"
+				>
+			</div>
+			<button onclick="dlibStart()">검출</button>
+			<button onclick="dilb_result()">검출 결과 확인</button>
+		</section>
+
+	</div>
+
+	<!-- footer -->
+	{% include 'public/footer.html' %}
+	<!-- script -->
+	{% include 'public/script.html' %}
+
+
+	<script>
+		$('li').remove('')
+		$('#side_ul').append("<li><a href='#intro'>recidist</a></li>")
+
+		console.log(document.domain + ":" + location.port)
+		socket.on('connect', () => {
+			console.log('연결')
+		})
+		function dlibStart(){
+			console.log('click')
+			socket.emit('get_recidivist')
+		}
+		function dilb_result(){
+			const link = "https://d2nh0kpre7014e.cloudfront.net/success/"
+			for(let i = 0 ; i < 5 ; i++){
+				fetch(link + `detection${i}.jpg`)
+					.then(response => {
+					if (response.ok) {
+						return response.blob();
+					}
+					throw new Error('Network response was not ok.');
+					})
+					.then(blob => {
+					const objectUrl = URL.createObjectURL(blob);
+					const text = `
+						<section>
+						<a href="#" class="image">
+							<img id='img${i}' src="${objectUrl}" alt="" data-position="center center" width="416px" height="416px"/>
+						</a>
+						</section>
+					`;
+					$('#wrapper').append(text);
+					})
+					.catch(err => {
+					console.log(`detection${i}.jpg is not found.`);
+					});
+				}
+			
+		}
+	</script>
+</body>
+</html>

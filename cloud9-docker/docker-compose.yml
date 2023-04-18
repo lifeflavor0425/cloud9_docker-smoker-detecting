@@ -1,0 +1,103 @@
+# 서비스, 컨테이너는 의존성 고려하여 순서대로 기술
+version: 'Tier-3-dlib'
+services:
+  # db
+  db:
+    # Dockerfile 없이 이미지 빌드할 내용을 직접 기술
+    image: mariadb
+    # 비밀번호 관련 이전 버전들과의 호환성을 위한 플러그인 설정
+    command: '--default-authentication-plugin=mysql_native_password'
+    restart: always
+    healthcheck: 
+    # mysqladmin ping -h 127.0.0.1 --password="$$(cat /run/secrets/db-password)" --silent
+      test: ["CMD-SHELL", 'mysqladmin ping -h 127.0.0.1 --password="$$(cat /run/secrets/db-password)" --silent']
+      interval: 10s
+      retries: 3
+      start_period: 30s
+    # 비밀번호 정보 지정
+    secrets:
+      - db-password
+    # 포트 지정
+    expose:
+      - 3306
+      - 3307
+    environment:
+      - MYSQL_DATABASE=user_db
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/db-password
+    # 네트워크
+    networks:
+      - was_backend_net
+    # 볼륨 -> 볼륨 마운트 방식
+    volumes:
+      - db_vol:/var/lib/mysql
+  # backend
+  backend:
+    build:
+      context: backend
+      target: builder
+    ports:
+      - 8000:8000
+    stop_signal: SIGINT
+    restart: always
+    networks:
+      - web_frontend_net
+      - was_backend_net
+    depends_on:
+      # db라는 이름을 가진 컨테이너의 상태가 살아 있을 때 가동
+      db: 
+        condition: service_healthy
+      # 비번 파일을 백엔드에도 카피해 둔다, 단 보안적으로 적절하지 않다
+    secrets:
+      - db-password
+
+  # proxy -> web파트, nginx, 구성설정
+  proxy:
+    # proxy 폴더 밑에가서 Dockerfile을 찾아서 빌드
+    build: proxy
+    # 재가동 옵션
+    restart: always
+    # 포트 설정, Dockeerfile 내에 EXPOSE 미사용
+    ports:
+      - 80:80
+    # 구동시 의존성 부여 -> backend(was)가 가동된 후에 가동
+    depends_on:
+      - backend
+    # 네트워크
+    networks:
+      - web_frontend_net
+  
+  # # dlib, yolo
+  dlib:
+    build: detection
+    ports:
+      - '3333:3333'
+    tty: true
+    stdin_open: true
+    restart: always
+
+  yolo:
+    build: yolo_docker
+    ports:
+      - '3334:3334'
+    tty: true
+    stdin_open: true
+    restart: always
+
+# 볼륨
+volumes:
+  # 볼륨 마운트
+  db_vol:
+
+# 네트워크
+networks:
+  # 프론트 방향 네트워크
+  web_frontend_net:
+  # 백엔드 방향 네트워크
+  was_backend_net:
+
+# 보안 -> db 비번파일을 읽어서 적용
+secrets:
+  # db 비번을 의미(커스텀)
+  db-password:
+    # 파일지정
+    file: db/password.txt

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!-- Hyperspace by HTML5 UP -->
+	<title>Smoker Video</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<link rel="stylesheet" href="/static/assets/css/main.css" />
+	<noscript>
+		<link rel="stylesheet" href="/static/assets/css/noscript.css" />
+	</noscript>
+</head>
+<body class="is-preload"> 
+	<!-- side bar -->
+	{% include 'public/sidebar.html' %}
+    <div id="wrapper">
+
+		<!-- stream -->
+		<section id="intro" class="wrapper style1 fullscreen fade-up">
+            <div class="inner">
+                <video width="100%" height="auto" style="position:relative" autoplay controls loop muted poster="aaa" preload="bbb">
+                    <source src="/static/video/video_org.mp4" type="video/mp4">
+                </video>
+            </div>
+            <button onclick="upload()">upload</button>
+		</section>
+    </div>
+    <!-- footer -->
+	{% include 'public/footer.html' %}
+
+	<!-- script -->
+	{% include 'public/script.html' %}
+
+    <script>
+        $('li').remove('')
+		$('#side_ul').append("<li><a href='#intro'>recidist</a></li>")
+        function upload(){
+			console.log('upload')
+			socket.emit('video_upload')
+		}
+    </script>
+</body>
+</html>

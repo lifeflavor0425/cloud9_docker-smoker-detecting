@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/assets/css/main.css" />
+    <noscript>
+		<link rel="stylesheet" href="/static/assets/css/noscript.css" />
+	</noscript>
+    <style>
+        /* Add your custom styles here */
+        .login-box {
+            width: 360px;
+            margin: 50px auto;
+            padding: 50px 30px;
+            background-color: rgb(73, 51, 130);
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
+        }
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #fff;
+        }
+        label {
+            font-size: 14px;
+            color: #fff;
+            display: block;
+            margin-bottom: 8px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 3px;
+            background-color: gray;
+            margin-bottom: 20px;
+        }
+        input[type="submit"] {
+            width: 100%;
+            background-color: #008CBA;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #006F8A;
+        }
+        .error-message {
+            font-size: 14px;
+            color: #ff0000;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="is-preload">
+    {% include 'public/sidebar.html' %}
+    <div id="wrapper">
+        <div class="login-box">
+            <h2>Login to Intranet</h2>
+            {% if error %}
+            <p class="error-message">Invalid username or password. Please try again.</p>
+            {% endif %}
+            <form method="POST" action="{{ url_for('login') }}">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                <input type="submit" value="Login">
+            </form>
+        </div>
+    </div>
+    {% include 'public/footer.html' %}
+    {% include 'public/script.html' %}
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+		<link rel="stylesheet" href="{{ url_for ('static', filename='pptSet/dist/reset.css')}}">
+		<link rel="stylesheet" href="{{ url_for ('static', filename='pptSet/dist/reveal.css')}}">
+		<link rel="stylesheet" href="{{ url_for ('static', filename='pptSet/dist/theme/black.css')}}">
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="{{ url_for ('static', filename='pptSet/plugin/highlight/monokai.css')}}">
+	</head>
+	<body>
+		<div class="reveal">
+		  <div class="slides">
+			{% for index in range(1,115)%}
+			<section data-background-image="static/pptSet/slides/슬라이드{{index}}.JPG"></section>
+			{% endfor %}
+			<section>
+				<h1>
+					<a href="/">HOME</a>
+				</h1>
+			</section>
+		  </div>
+		</div>
+		<script src="{{ url_for ('static', filename='pptSet/dist/reveal.js')}}"></script>
+		<script>
+		  Reveal.initialize();
+		</script>
+	  </body>
+</html>
